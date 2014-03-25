@@ -18,8 +18,10 @@
 
 """Test class for parser"""
 
-import csvparser
 import unittest
+
+from frustrated_tipster import csvparser
+
 
 class TestParser(unittest.TestCase):
 

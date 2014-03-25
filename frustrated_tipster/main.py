@@ -4,6 +4,7 @@
 #
 import csvparser
 
+
 def main():
     print "Welcome to frustrated tipster!"
     csvparser.find_and_parse_files()
