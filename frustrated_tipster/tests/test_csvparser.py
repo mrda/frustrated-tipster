@@ -26,8 +26,19 @@ from frustrated_tipster import csvparser
 class TestParser(unittest.TestCase):
 
     def simple_parse_date_test(self):
-        expected = ("Saturday", "28", "March", None)
-        self.assertEqual(expected, csvparser.parse_date("Saturday, 28 March "))
+        expected = ("Friday", "22", "March", "8:10 pm")
+        self.assertEqual(expected,
+                         csvparser.parse_date("Friday, 22 March (8:10 pm) "))
+
+    def parse_date_no_time_test(self):
+        expected = ("Thursday", "26", "March", None)
+        self.assertEqual(expected,
+                         csvparser.parse_date("Thursday, 26 March "))
+
+    def parse_date_no_day_test(self):
+        expected = ('', "19", "September", "7:30pm")
+        self.assertEqual(expected,
+                         csvparser.parse_date("19 September (7:30pm) "))
 
 if __name__ == '__main__':
     unittest.main()

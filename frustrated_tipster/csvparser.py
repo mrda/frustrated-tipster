@@ -32,7 +32,7 @@ import re
 
 FILENAME_RE = re.compile(r'(.*)(\d{4})\.csv')
 DATE_RE = re.compile((r'(?P<day>[a-zA-z]*)(\, )?(?P<date>\d{1,2}) '
-                      '(?P<month>[a-zA-Z]+) (\((?P<time>\d\:\d{1,2} '
+                      '(?P<month>[a-zA-Z]+) (\((?P<time>\d\:\d{1,2}( )?'
                       '(a|p)m)\))?'))
 TEAM_RE = re.compile((r'(?P<name>.*) (?P<goals>\d+)\.(?P<points>\d+)(\.)?( )?'
                       '\((?P<total>\d+)\)'))
