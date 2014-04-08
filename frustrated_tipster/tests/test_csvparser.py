@@ -40,5 +40,45 @@ class TestParser(unittest.TestCase):
         self.assertEqual(expected,
                          csvparser.parse_date("19 September (7:30pm) "))
 
+    def parse_filename_for_year_test(self):
+        f = ("/home/mrda/src/frustrated-tipster/frustrated_tipster/data/"
+             "afl_results_2011.csv")
+        game_data = {'2011': csvparser.parse_file(f, '2011')}
+        # Games in a regular round
+        self.assertEqual(8, len(game_data['2011']['10']))
+        # Games in a finals round
+        self.assertEqual(4, len(game_data['2011']['FW1']))
+        self.assertEqual(2, len(game_data['2011']['FW2']))
+        self.assertEqual(2, len(game_data['2011']['FW3']))
+        self.assertEqual(1, len(game_data['2011']['GF']))
+        # Total Rounds in season
+        self.assertEqual(28, len(game_data['2011']))
+        # Total Games in season
+        games = 0
+        for round in game_data['2011']:
+            games += len(game_data['2011'][round])
+        self.assertEqual(196, games)
+        # Years present
+        self.assertEqual(1, len(game_data))
+
+    def parse_number_of_games_in_round_test(self):
+        game_data = csvparser.load_data()
+        # Games in a regular round
+        self.assertEqual(9, len(game_data['2012']['10']))
+        # Games in a finals round
+        self.assertEqual(4, len(game_data['2012']['FW1']))
+        self.assertEqual(2, len(game_data['2012']['FW2']))
+        self.assertEqual(2, len(game_data['2012']['FW3']))
+        self.assertEqual(1, len(game_data['2012']['GF']))
+        # Total Rounds in season
+        self.assertEqual(27, len(game_data['2012']))
+        # Total Games in season
+        games = 0
+        for round in game_data['2012']:
+            games += len(game_data['2012'][round])
+        self.assertEqual(207, games)
+        # Years present
+        self.assertGreaterEqual(5, len(game_data))
+
 if __name__ == '__main__':
     unittest.main()

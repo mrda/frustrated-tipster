@@ -133,10 +133,10 @@ def _dump_data(data):
     for year in sorted(data.keys()):
         print "Year " + year
         for round in sorted(data[year].keys()):
-            print "  Round " + round
+            print "  Round " + str(round)
             for game in sorted(data[year][round].keys()):
                 print "    Game " + str(game)
-                print "      " + _format_date_string(year, round, game)
+                print "      " + _format_date_string(data, year, round, game)
                 print "      " + (data[year][round][game]['home_team'] + " " +
                                   data[year][round][game]['result'] + " " +
                                   data[year][round][game]['away_team'])
@@ -168,14 +168,14 @@ def parse_file(filename, year, debug=False, interactive=False):
                 continue
             if interactive:
                 _print_row(row)
-            round = row[0]
+            round = str(row[0])
             date_tuple = parse_date(row[1])
             home_tuple = parse_team(row[2])
             result = parse_result(row[3])
             away_tuple = parse_team(row[4])
             ground_tuple = parse_ground(row[5])
             # Handle the next round
-            if round not in data:
+            if round not in data.keys():
                 data[round] = {}
             # Handle game ids
             if round != last_round:
@@ -209,15 +209,16 @@ def parse_file(filename, year, debug=False, interactive=False):
                 data[round][game]['time'] = date_tuple[3]
             else:
                 data[round][game]['time'] = None
-            return data
+        return data
 
 
 def find_and_parse_files(debug, interactive):
     data = {}
-    directory = "data/"
+    # TODO(mrda): FIXME path
+    directory = "/home/mrda/src/frustrated-tipster/frustrated_tipster/data/"
     for fn in os.listdir(directory):
         filename = directory + fn
-        (startstr, year) = parse_year(fn, interactive)
+        (startstr, year) = parse_year(fn)
         if startstr == 'afl_results_':
             if debug:
                 print "--- Parsing " + filename
@@ -228,9 +229,9 @@ def find_and_parse_files(debug, interactive):
     return data
 
 
-def load_data(debug=False):
+def load_data(debug=False, interactive=False):
     """Load data from disk, and return a dictionary of game data"""
-    data = find_and_parse_files(debug)
+    data = find_and_parse_files(debug, interactive)
     return data
 
 
@@ -238,6 +239,6 @@ if __name__ == '__main__':
     interactive = True
     if 'TIPPING_DEBUG' in os.environ:
         debug = True
-    data = load_data(debug)
+    data = load_data(debug, interactive)
     if interactive:
         _dump_data(data)
