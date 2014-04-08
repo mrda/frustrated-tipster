@@ -43,8 +43,6 @@ GROUND_RE = re.compile((r'(?P<name>.*) \((C|c)rowd\:( )+'
 debug = False
 interactive = False
 
-data = {}
-
 
 def parse_date(string):
     # return the day, date and time as a dict
@@ -100,28 +98,28 @@ def parse_year(filename):
     return (m.group(1), m.group(2))
 
 
-def _format_day(year, round, game):
+def _format_day(data, year, round, game):
     if data[year][round][game]['day'] is None:
         return "<Unknown day>"
     else:
         return data[year][round][game]['day']
 
 
-def _format_time(year, round, game):
+def _format_time(data, year, round, game):
     if data[year][round][game]['time'] is None:
         return "<Unknown time>"
     else:
         return data[year][round][game]['time']
 
 
-def _format_date_string(year, round, game):
-    return (_format_day(year, round, game) + " "
+def _format_date_string(data, year, round, game):
+    return (_format_day(data, year, round, game) + " "
             + data[year][round][game]['date'] + " "
             + data[year][round][game]['month'] + " "
-            + year + " " + _format_time(year, round, game))
+            + year + " " + _format_time(data, year, round, game))
 
 
-def _format_score(year, round, game):
+def _format_score(data, year, round, game):
     return (data[year][round][game]['home_goals'] + ":" +
             data[year][round][game]['home_points'] + " (" +
             data[year][round][game]['home_total'] + ") to " +
@@ -130,7 +128,7 @@ def _format_score(year, round, game):
             data[year][round][game]['away_total'] + ")")
 
 
-def _dump_data():
+def _dump_data(data):
     """ Decode and print all data read from alf_results files """
     for year in sorted(data.keys()):
         print "Year " + year
@@ -142,7 +140,7 @@ def _dump_data():
                 print "      " + (data[year][round][game]['home_team'] + " " +
                                   data[year][round][game]['result'] + " " +
                                   data[year][round][game]['away_team'])
-                print "      " + _format_score(year, round, game)
+                print "      " + _format_score(data, year, round, game)
                 print "      " + data[year][round][game]['ground']
                 print "      " + data[year][round][game]['attendance']
 
@@ -159,9 +157,9 @@ def _print_row(row):
     print "--"
 
 
-def parse_file(filename, year, debug=False):
+def parse_file(filename, year, debug=False, interactive=False):
     with open(filename) as csvfile:
-        data[year] = {}
+        data = {}
         last_round = 0
         game = 0
         reader = csv.reader(csvfile, quotechar='"')
@@ -177,15 +175,15 @@ def parse_file(filename, year, debug=False):
             away_tuple = parse_team(row[4])
             ground_tuple = parse_ground(row[5])
             # Handle the next round
-            if round not in data[year]:
-                data[year][round] = {}
+            if round not in data:
+                data[round] = {}
             # Handle game ids
             if round != last_round:
                 last_round = round
                 game = 1
             else:
                 game = game + 1
-            data[year][round][game] = {
+            data[round][game] = {
                 'date': date_tuple[1],
                 'month': date_tuple[2],
                 'year': year,
@@ -203,33 +201,43 @@ def parse_file(filename, year, debug=False):
             }
             # Sometimes the day is optional
             if date_tuple[0]:
-                data[year][round][game]['day'] = date_tuple[0]
+                data[round][game]['day'] = date_tuple[0]
             else:
-                data[year][round][game]['day'] = None
+                data[round][game]['day'] = None
             # Sometimes the time is optional
             if date_tuple[3]:
-                data[year][round][game]['time'] = date_tuple[3]
+                data[round][game]['time'] = date_tuple[3]
             else:
-                data[year][round][game]['time'] = None
+                data[round][game]['time'] = None
+            return data
 
 
-def find_and_parse_files():
+def find_and_parse_files(debug, interactive):
+    data = {}
     directory = "data/"
     for fn in os.listdir(directory):
         filename = directory + fn
-        (startstr, year) = parse_year(fn)
+        (startstr, year) = parse_year(fn, interactive)
         if startstr == 'afl_results_':
             if debug:
                 print "--- Parsing " + filename
-            parse_file(filename, year, debug)
+            data[year] = parse_file(filename, year, debug, interactive)
         else:
             if debug:
                 print "%%% Skipping " + filename
+    return data
+
+
+def load_data(debug=False):
+    """Load data from disk, and return a dictionary of game data"""
+    data = find_and_parse_files(debug)
+    return data
+
 
 if __name__ == '__main__':
     interactive = True
     if 'TIPPING_DEBUG' in os.environ:
         debug = True
-    find_and_parse_files()
+    data = load_data(debug)
     if interactive:
-        _dump_data()
+        _dump_data(data)

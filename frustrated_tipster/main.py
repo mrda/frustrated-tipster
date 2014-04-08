@@ -7,8 +7,8 @@ import csvparser
 
 def main():
     print "Welcome to frustrated tipster!"
-    csvparser.find_and_parse_files()
-    csvparser._dump_data()
+    game_data = csvparser.load_data()
+    csvparser._dump_data(game_data)
 
 if __name__ == '__main__':
     main()
