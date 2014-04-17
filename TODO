@@ -1,9 +1,6 @@
 BUG: Fix parser._dump_data() so it prints out rounds in numeric order (allowing for finals)
 FEATURE: Add in parsing this year's fixture
-FEATURE: Add in building a premiership table from the current year's results
-FEATURE: Create a base class for predictions
-FEATURE: Create the first predictor, solely based on relative places on the premiership places
 FEATURE: Create another predictor, solely based on home/away ground (bonus points for Geelong etc)
 FEATURE: Write a func to find the history between two teams
 FEATURE: Create another predictor, solely based on win/loss record between the teams
-
+FEATURE: Write a predictor based upon winning streak

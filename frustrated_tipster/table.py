@@ -28,6 +28,10 @@ class PremiershipTable:
     def __init__(self, game_data):
         self.game_data = game_data
 
+    def calculate_current_table(self):
+        year = gd.get_current_year(self.game_data)
+        return self.calculate_table_for_year(year)
+
     def calculate_table_for_year(self, year):
         rnd = gd.get_current_round(self.game_data, year)
         return self.calculate_table(year, rnd)
