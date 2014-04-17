@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-# parser.py - Read the AFL results files, and build up a dictionary
-#             of what we find
+# csvparser.py - Read the AFL results files, and build up a dictionary
+#                of what we find
 #
 # Turn on debugging by 'export TIPPING_DEBUG=1' in your shell
 #
@@ -68,16 +68,16 @@ def parse_team(string):
         return None
 
 
-def parse_result(string):
+def parse_result(str):
     # return "won", "loss", or "draw" as a string
-    if string.startswith('def.'):
-        return 'defeated'
-    elif string.startswith('def by.'):
+    if str.strip() == 'def. by':
         return 'lost to'
-    elif string.startswith('drew'):
-        return 'drew with'
+    elif str.strip() == 'def.':
+        return 'defeated'
+    elif str.strip() == 'drew with':
+        return 'drew'
     else:
-        print "*** Couldn't parse result \"" + string + "\""
+        print "*** Couldn't parse result \"" + str + "\""
         return None
 
 

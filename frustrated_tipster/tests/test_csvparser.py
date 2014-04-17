@@ -16,14 +16,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # Or try here: http://www.fsf.org/copyleft/gpl.html
 
-"""Test class for parser"""
+"""Test class for csvparser"""
 
 import unittest
 
 from frustrated_tipster import csvparser
 
 
-class TestParser(unittest.TestCase):
+class TestCSVParser(unittest.TestCase):
 
     def simple_parse_date_test(self):
         expected = ("Friday", "22", "March", "8:10 pm")
