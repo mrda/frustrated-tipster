@@ -31,13 +31,13 @@ import re
 
 
 FILENAME_RE = re.compile(r'(.*)(\d{4})\.csv')
-DATE_RE = re.compile((r'(?P<day>[a-zA-z]*)(\, )?(?P<date>\d{1,2}) '
-                      '(?P<month>[a-zA-Z]+) (\((?P<time>\d\:\d{1,2}( )?'
+DATE_RE = re.compile((r'(?P<day>[a-zA-z]*)(\,\s)?(?P<date>\d{1,2}) '
+                      '(?P<month>[a-zA-Z]+)\s(\((?P<time>\d\:\d{1,2}(\s)?'
                       '(a|p)m)\))?'))
-TEAM_RE = re.compile((r'(?P<name>.*) (?P<goals>\d+)\.(?P<points>\d+)(\.)?( )?'
-                      '\((?P<total>\d+)\)'))
-GROUND_RE = re.compile((r'(?P<name>.*) \((C|c)rowd\:( )+'
-                        '(?P<attendance>\d+,?\d+)'))
+TEAM_RE = re.compile((r'(?P<name>.*)\s+((?P<goals>\d+)\.(?P<points>\d+)(\.)?\s?'
+                      '\((?P<total>\d+)\))?'))
+GROUND_RE = re.compile((r'(?P<name>.*)\s\((C|c)rowd\:\s+'
+                        '(?P<attendance>\d+,?\d+)?'))
 
 
 debug = False
@@ -76,6 +76,8 @@ def parse_result(str):
         return 'defeated'
     elif str.strip() == 'drew with':
         return 'drew'
+    elif str.strip() == 'vs.':
+        return 'verses'
     else:
         print "*** Couldn't parse result \"" + str + "\""
         return None
