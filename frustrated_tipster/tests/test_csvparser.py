@@ -41,8 +41,7 @@ class TestCSVParser(unittest.TestCase):
                          csvparser.parse_date("19 September (7:30pm) "))
 
     def parse_filename_for_year_test(self):
-        f = ("/home/mrda/src/frustrated-tipster/frustrated_tipster/data/"
-             "afl_results_2011.csv")
+        f = (csvparser.get_data_directory() + "afl_results_2011.csv")
         game_data = {'2011': csvparser.parse_file(f, '2011')}
         # Games in a regular round
         self.assertEqual(8, len(game_data['2011']['10']))
@@ -77,8 +76,8 @@ class TestCSVParser(unittest.TestCase):
         for round in game_data['2012']:
             games += len(game_data['2012'][round])
         self.assertEqual(207, games)
-        # Years present
-        self.assertGreaterEqual(5, len(game_data))
+        # At least 5 years of data present
+        self.assertLessEqual(5, len(game_data))
 
 if __name__ == '__main__':
     unittest.main()

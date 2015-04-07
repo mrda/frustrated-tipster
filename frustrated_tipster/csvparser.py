@@ -37,7 +37,7 @@ DATE_RE = re.compile((r'(?P<day>[a-zA-z]*)(\,\s)?(?P<date>\d{1,2})\s'
                       '(a|p)m)\))?'))
 TEAM_RE = re.compile((r'(?P<name>.*)\s+((?P<goals>\d+)\.(?P<points>\d+)(\.)?'
                       '\s?\((?P<total>\d+)\))?'))
-GROUND_RE = re.compile((r'(?P<name>.*)\s\((C|c)rowd\:\s+'
+GROUND_RE = re.compile((r'(?P<name>.*)\s?\((C|c)rowd\:\s+'
                         '(?P<attendance>\d+,?\d+)?'))
 
 
@@ -215,10 +215,20 @@ def parse_file(filename, year, debug=False, interactive=False):
         return data
 
 
+def get_data_directory():
+    if 'FRUSTRATED_TIPSTER' in os.environ:
+        directory = os.environ['FRUSTRATED_TIPSTER']
+        if directory[-1] != os.path.sep:
+            directory += os.path.sep
+    else:
+        home = os.environ['HOME']
+        directory = home + '/src/frustrated-tipster/frustrated_tipster/data/'
+    return directory
+
+
 def find_and_parse_files(debug, interactive):
     data = {}
-    # TODO(mrda): FIXME path
-    directory = "/home/mrda/src/frustrated-tipster/frustrated_tipster/data/"
+    directory = get_data_directory()
     for fn in os.listdir(directory):
         filename = directory + fn
         (startstr, year) = parse_year(fn)

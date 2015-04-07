@@ -30,18 +30,18 @@ class TestGameData(unittest.TestCase):
     def get_current_year_test(self):
         gdata = csvparser.load_data()
         year = gd.get_current_year(gdata)
-        self.assertEqual('2013', year)
+        self.assertEqual('2014', year)
 
     # TODO(mrda): setup test data, don't use real data for current
     def get_current_year_and_round_test(self):
         gdata = csvparser.load_data()
         year, rnd = gd.get_current_year_and_round(gdata)
-        self.assertEqual(('2013', 'GF'), (year, rnd))
+        self.assertEqual(('2014', 'GF'), (year, rnd))
 
     # TODO(mrda): setup test data, don't use real data for current
     def get_team_names_test(self):
         gdata = csvparser.load_data()
-        teams = gd.get_team_names(gdata, '2013')
+        teams = gd.get_team_names(gdata, '2014')
         print (str(teams))
 
 # TODO(mrda): many more tests needed here
